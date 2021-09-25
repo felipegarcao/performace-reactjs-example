@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useCallback, useState } from "react"
 import { SearchResults } from "../components/SearchResults";
 import styles from '../styles/Home.module.css'
 
@@ -9,7 +9,7 @@ export default function Home() {
   async function handleSearch(event: FormEvent) {
     event.preventDefault()
 
-    if (!search.trim()){
+    if (!search.trim()) {
       return;
     }
 
@@ -18,6 +18,10 @@ export default function Home() {
 
     setResults(data)
   }
+
+  const addToWishlist = useCallback(async (id: number) => {
+    console.log(id)
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -34,7 +38,10 @@ export default function Home() {
         <button type="submit">Buscar</button>
       </form>
 
-      <SearchResults results={results} />
+      <SearchResults
+        results={results}
+        onAddToWishList={addToWishlist}
+      />
     </div>
   )
 }
