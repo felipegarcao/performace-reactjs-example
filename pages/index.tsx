@@ -8,6 +8,14 @@ type ResultsProps = {
   data: any[];
 }
 
+interface ProductMapProps {
+  id: string;
+  title: string;
+  price: number;
+  priceFormatted: number;
+}
+
+
 export default function Home() {
   const [search, setSearch] = useState('');
   
@@ -31,7 +39,7 @@ export default function Home() {
       style: 'currency'
     })
 
-    const products = data.map(product => {
+    const products = data.map((product: ProductMapProps) => {
       return {
         id: product.id,
         title: product.title,

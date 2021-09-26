@@ -1,4 +1,15 @@
-import { memo } from 'react'
+import React, { memo, useState } from 'react';
+import {AddProductToWhitelistProps} from './AddProductToWhitelist'
+import dynamic from 'next/dynamic';
+import lodash from 'lodash';
+
+// import { AddProductToWhitelist } from './AddProductToWhitelist';
+
+const AddProductToWhitelist = dynamic<AddProductToWhitelistProps>(() => {
+  return import('./AddProductToWhitelist').then(mod => mod.AddProductToWhitelist)
+}, {
+  loading: () => <span>Carregando....</span>
+})
 
 interface ProductItemProps {
   product: {
@@ -11,15 +22,26 @@ interface ProductItemProps {
 }
 
 function ProductItemComponent({ product, onAddToWishList }: ProductItemProps) {
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+
   return (
     <div>
       {product.title} - <strong>{product.priceFormatted}</strong>
-      <button onClick={() => onAddToWishList(product.id)}>Add To WishList</button>
+
+      <button onClick={() => setIsAddingToWishlist(true)}>Adicionar aos Favoritos</button>
+
+      {isAddingToWishlist && (
+        <AddProductToWhitelist
+          onAddToWishList={() => onAddToWishList(product.id)}
+          onRequestClose={() => setIsAddingToWishlist(false)}
+        />
+      )}
+
     </div>
   )
 }
 
 
 export const ProductItem = memo(ProductItemComponent, (prevProps, nextProps) => {
-  return Object.is(prevProps.product, nextProps.product)
+  return lodash.isEqual(prevProps.product, nextProps.product)
 })
